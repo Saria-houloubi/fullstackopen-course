@@ -7,7 +7,7 @@ return JSON.stringify(req.body)
 })
 app.use(bodyParser.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-
+app.use(express.static('build'))
 let persons = [
 	{
 		name : "Arto Hellas",
@@ -35,11 +35,11 @@ app.get("/api/persons", (req,res) =>{
 	res.json(persons)
 })
 
-app.get("/info", (req,res)=>{
+app.get("/api/info", (req,res)=>{
 res.send(`<p>phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
 })
 
-app.get('/api/person/:id',(req,res)=>{
+app.get('/api/persons/:id',(req,res)=>{
 	const id = Number(req.params.id)
 	const person = persons.find(p=>p.id === id)
 
@@ -50,7 +50,7 @@ app.get('/api/person/:id',(req,res)=>{
 	}
 })
 
-app.delete('/api/person/:id',(req,res)=>{
+app.delete('/api/persons/:id',(req,res)=>{
 	const id = Number(req.params.id)
 	
 	persons = persons.filter(p=>p.id !== id)
@@ -95,7 +95,7 @@ app.post("/api/persons", (req,res)=>{
 	return res.json(person)
 
 })
-const port = 3001
+const port = process.env.PORT || 3001
 app.listen(port ,()=>{
 	console.log("running")
 })
